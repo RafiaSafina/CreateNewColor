@@ -31,23 +31,26 @@ class ViewController: UIViewController {
     //    MARK: - SlidersAction
   
     @IBAction func redSliderAction() {
-        
-        
-        multiColoredView.backgroundColor = UIColor(red: CGFloat(redSlider.value), green: CGFloat(greenSlider.value), blue: CGFloat(blueSlider.value), alpha: 1)
+        addingColor()
         redColorValue.text = String(format: "%0.2f", redSlider.value)
     }
     
     @IBAction func greenSliderAction() {
-        
-        multiColoredView.backgroundColor = UIColor(red: CGFloat(redSlider.value), green: CGFloat(greenSlider.value), blue: CGFloat(blueSlider.value), alpha: 1)
+        addingColor()
         greenColorValue.text = String(format: "%0.2f", greenSlider.value)
     }
     
     @IBAction func blueSliderAction() {
-        
-        multiColoredView.backgroundColor = UIColor(red: CGFloat(redSlider.value), green: CGFloat(greenSlider.value), blue: CGFloat(blueSlider.value), alpha: 1)
+        addingColor()
         blueColorValue.text =  String(format: "%0.2f", blueSlider.value)
     }
     
+    private func addingColor() {
+        multiColoredView.backgroundColor = UIColor(
+            red: CGFloat(redSlider.value),
+            green: CGFloat(greenSlider.value),
+            blue: CGFloat(blueSlider.value),
+            alpha: 1
+        )
+    }
 }
-
