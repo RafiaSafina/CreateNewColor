@@ -39,6 +39,10 @@ class SettingsViewController: UIViewController {
         setValue(for: redSlider, greenSlider, blueSlider)
         setValue(for: redValueLabel,greenValueLabel, blueValueLabel)
         setValue(for: redTextField, greenTextField, blueTextField)
+        
+        redTextField.delegate = self
+        greenTextField.delegate = self
+        blueTextField.delegate = self
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -109,7 +113,6 @@ extension SettingsViewController {
             default: blueSlider.value = Float(ciColor.blue)
             }
         }
-        
     }
     
     private func getString(for slider: UISlider) -> String {
@@ -125,28 +128,13 @@ extension SettingsViewController {
         alert.addAction(okAction)
         present(alert, animated: true)
     }
-    
-    
 }
 
 extension SettingsViewController: UITextFieldDelegate {
-     func textFieldDidBeginEditing(_ textField: UITextField) {
-        let keyboardToolBar = UIToolbar()
-        keyboardToolBar.sizeToFit()
-        
-        let doneButton = UIBarButtonItem(
-            barButtonSystemItem: .done,
-            target: textField,
-            action: #selector(resignFirstResponder)  //hide keyboard
-        )
-        
-        let blankSpace = UIBarButtonItem(
-            barButtonSystemItem: .flexibleSpace,
-            target: nil,
-            action: nil
-        )
-        keyboardToolBar.items = [blankSpace, doneButton]
-    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+    } // done button realization
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let text = textField.text else {
@@ -154,17 +142,45 @@ extension SettingsViewController: UITextFieldDelegate {
             return
         }
         guard let currentValue = Float(text), (0...1).contains(currentValue) else {
-            showAlert(title: "Wrong format", message: "Try again", textField: textField)
+            showAlert(
+                title: "Wrong format",
+                message: "Try again",
+                textField: textField
+            )
             return
         }
         
-        switch textField {
+        switch textField { 
         case redTextField:
             redSlider.setValue(currentValue, animated: true)
+            setValue(for: redValueLabel)
         case greenTextField:
             greenSlider.setValue(currentValue, animated: true)
+            setValue(for: greenValueLabel)
         default:
             blueSlider.setValue(currentValue, animated: true)
+            setValue(for: blueValueLabel)
         }
+        setColor()
+    }
+    
+     func textFieldDidBeginEditing(_ textField: UITextField) {
+        let keyboardToolBar = UIToolbar()
+        keyboardToolBar.sizeToFit()
+        
+        textField.inputAccessoryView = keyboardToolBar
+
+        let doneButton = UIBarButtonItem(
+            barButtonSystemItem: .done,
+            target: textField,
+            action: #selector(resignFirstResponder)  //hide keyboard
+        )
+        
+        let flexBarButton = UIBarButtonItem(
+            barButtonSystemItem: .flexibleSpace,
+            target: nil,
+            action: nil
+        )
+        keyboardToolBar.items = [flexBarButton, doneButton]
     }
 }
